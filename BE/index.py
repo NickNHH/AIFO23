@@ -13,7 +13,10 @@ api_key = 'AIzaSyDHp9JYjw2l36x448MRcpBEHr7EIpGnJ8U'
 youtube = build('youtube', 'v3', developerKey=api_key)
 
 # path to the key-file
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"]='/Users/tuni/OneDrive/Studium/3 sem/AIFo/Project/BE/yt-chatbot-g99r-482b927c4e27.json'
+os.environ[
+    "GOOGLE_APPLICATION_CREDENTIALS"] = '/Users/tuni/OneDrive/Studium/3 sem/AIFo/Project/BE/yt-chatbot-g99r-482b927c4e27.json'
+
+
 # os.environ["GOOGLE_APPLICATION_CREDENTIALS"]='C:/Users/tobia/OneDrive - OST/Studium/3. Semester/AIFO/Projekt/AIFO23/AIFO23/BE/yt-chatbot-g99r-482b927c4e27.json'
 
 
@@ -48,13 +51,14 @@ def get_output(response):
                 type='video',
                 part='id,snippet',
                 channelId=channel_id,
-                maxResults=1 # Anzahl der Suchergebnisse, die du erhalten möchtest
+                maxResults=1,  # Anzahl der Suchergebnisse, die du erhalten möchtest
+                videoDuration=length if length else 'any'
             ).execute()
 
             for search_result in search_response.get('items', []):
                 video_id = search_result['id']['videoId']
                 video_title = search_result['snippet']['title']
-                video_iframe =  f'https://www.youtube.com/embed/{video_id}'
+                video_iframe = f'https://www.youtube.com/embed/{video_id}'
                 output['video_iframe'] = video_iframe
                 output['video_title'] = video_title
 
