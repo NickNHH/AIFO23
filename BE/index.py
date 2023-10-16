@@ -3,12 +3,62 @@ from flask_cors import CORS
 import os
 from google.cloud import dialogflow
 import uuid
+import json
+from googleapiclient.discovery import build
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
+api_key = 'AIzaSyDHp9JYjw2l36x448MRcpBEHr7EIpGnJ8U'
+youtube = build('youtube', 'v3', developerKey=api_key)
+
 # path to the key-file
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"]='/Users/tuni/OneDrive/Studium/3 sem/AIFo/Project/BE/yt-chatbot-g99r-482b927c4e27.json'
+# os.environ["GOOGLE_APPLICATION_CREDENTIALS"]='/Users/tuni/OneDrive/Studium/3 sem/AIFo/Project/BE/yt-chatbot-g99r-482b927c4e27.json'
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"]='C:/Users/tobia/OneDrive - OST/Studium/3. Semester/AIFO/Projekt/AIFO23/AIFO23/BE/yt-chatbot-g99r-482b927c4e27.json'
+
+
+def get_output(response):
+    output = {
+        "message": response['response']
+    }
+    intent_name = response['query_result'].intent.display_name
+    if intent_name == 'video.search':
+        channel = response['query_result'].parameters.get('channel')
+        keyword = response['query_result'].parameters.get('keyword')
+        length = response['query_result'].parameters.get('length')
+        if channel != '' and keyword != '':
+            output['display_video'] = True
+
+            # Führe die Kanalsuche durch
+            search_response = youtube.search().list(
+                q=channel,
+                type='channel',
+                part='snippet',
+                maxResults=1  # Wir suchen nur nach dem ersten gefundenen Kanal
+            ).execute()
+
+            # Durchlaufe die Suchergebnisse und extrahiere den Kanal-ID
+            channel_id = None
+            if 'items' in search_response:
+                channel_id = search_response['items'][0]['id']['channelId']
+
+            search_response = youtube.search().list(
+                q=keyword,
+                type='video',
+                part='id,snippet',
+                channelId=channel_id,
+                maxResults=1 # Anzahl der Suchergebnisse, die du erhalten möchtest
+            ).execute()
+
+            for search_result in search_response.get('items', []):
+                video_id = search_result['id']['videoId']
+                video_title = search_result['snippet']['title']
+                video_iframe =  f'https://www.youtube.com/embed/{video_id}'
+                output['video_iframe'] = video_iframe
+                output['video_title'] = video_title
+
+    return output
+
 
 @app.route('/sendMessage/', methods=['POST'])
 def sendMessage():
@@ -23,7 +73,9 @@ def sendMessage():
 
         response = detect_intent_demo('yt-chatbot-g99r', session_id, message, 'en')
 
-        return response['response']
+        output = get_output(response)
+
+        return output
     else:
         return "Invalid POST request, 'message' field is missing."
 
@@ -43,7 +95,7 @@ def detect_intent_demo(project_id, session_id, text, language_code):
         request={"session": session, "query_input": query_input}
     )
 
-    returnArray = {'intent': response.query_result.intent, 'response': format(response.query_result.fulfillment_text)}
+    returnArray = {'query_result': response.query_result, 'response': format(response.query_result.fulfillment_text)}
 
     return returnArray
 
