@@ -15,7 +15,7 @@ export class ChatBotComponent implements OnInit {
 
   ngOnInit(): void { }
 
-  sendMessage(event: any) {
+  async sendMessage(event: any) {
     const files = !event.files ? [] : event.files.map((file: { src: any; type: any; }) => {
       return {
         url: file.src,
@@ -34,7 +34,7 @@ export class ChatBotComponent implements OnInit {
         name: 'You',
       },
     });
-    const botReply = this.chatBotService.reply(event.message);
+    const botReply = await this.chatBotService.reply(event.message);
     if (botReply) {
       setTimeout(() => { this.messages.push(botReply) }, 500);
     }

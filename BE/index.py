@@ -8,18 +8,20 @@ app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
 # path to the key-file
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"]='/Users/tuni/OneDrive/Studium/3 sem/AIFo/Project/yt-chatbot-g99r-482b927c4e27.json'
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"]='/Users/tuni/OneDrive/Studium/3 sem/AIFo/Project/BE/yt-chatbot-g99r-482b927c4e27.json'
+
 
 @app.route('/hello/', methods=['GET'])
 def welcome():
     return "Hello Worlds!"
 
-session_id = "no-session-id"
+
 @app.route('/sendMessage/', methods=['POST'])
 def sendMessage():
     data = request.json  # Zugriff auf die im POST-Request gesendeten Daten
     if data and 'message' in data:
         message = data['message']
+        session_id = "no-session-id"
 
         # new session?
         if 'newSession' in data and data['newSession'] == 'true':
@@ -47,12 +49,10 @@ def detect_intent_demo(project_id, session_id, text, language_code):
         request={"session": session, "query_input": query_input}
     )
 
-    returnArray = []
-
-    returnArray['intent'] = response.query_result.intent
-    returnArray['response'] = format(response.query_result.fulfillment_text))
+    returnArray = {'intent': response.query_result.intent, 'response': format(response.query_result.fulfillment_text)}
 
     return returnArray
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)

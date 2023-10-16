@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { botReplies, gifsLinks, imageLinks } from './bot-replies';
-import { map } from "rxjs";
 
 @Injectable()
 export class ChatBotService {
+  public output: string | undefined = '';
 
   constructor(protected httpClient: HttpClient) {
   }
@@ -13,7 +13,7 @@ export class ChatBotService {
     return botReplies;
   }
 
-  reply(message: string) {
+  async reply(message: string) {
     const botReply: any =  this.loadBotReplies()
       .find((reply: any) => message.search(reply.regExp) !== -1);
 
@@ -34,15 +34,14 @@ export class ChatBotService {
       botReply.reply.files[2].url = imageLinks[Math.floor(Math.random() * imageLinks.length)];
     }
 
-    this.getDialogFlowResponse()
-    botReply.reply.text = "LOLS";
+    await this.getMessage(message)
+    botReply.reply.text = this.output;
     return { ...botReply.reply };
   }
 
-  getDialogFlowResponse() {
-    return this.httpClient.get("http://localhost:8080/hello/", {responseType: 'text'})
-      .subscribe(data => {
-        console.log(data)
-      });
+  async getMessage(input: string) {
+    return this.httpClient.post("http://localhost:8080/sendMessage/", {'message': input}, {responseType: 'text'}).toPromise().then(data => {
+      this.output = data;
+    });
   }
 }
