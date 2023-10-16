@@ -10,12 +10,6 @@ cors = CORS(app, resources={r"/*": {"origins": "*"}})
 # path to the key-file
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"]='/Users/tuni/OneDrive/Studium/3 sem/AIFo/Project/BE/yt-chatbot-g99r-482b927c4e27.json'
 
-
-@app.route('/hello/', methods=['GET'])
-def welcome():
-    return "Hello Worlds!"
-
-
 @app.route('/sendMessage/', methods=['POST'])
 def sendMessage():
     data = request.json  # Zugriff auf die im POST-Request gesendeten Daten
