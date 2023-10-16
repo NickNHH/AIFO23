@@ -26,9 +26,10 @@ def get_output(response):
         channel = response['query_result'].parameters.get('channel')
         keyword = response['query_result'].parameters.get('keyword')
         length = response['query_result'].parameters.get('length')
+        output['channel'] = channel
+        output['keyword'] = keyword
+        output['length'] = length
         if channel != '' and keyword != '':
-            output['display_video'] = True
-
             # Führe die Kanalsuche durch
             search_response = youtube.search().list(
                 q=channel,
