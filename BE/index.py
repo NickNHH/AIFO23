@@ -47,13 +47,14 @@ def get_output(response):
                 type='video',
                 part='id,snippet',
                 channelId=channel_id,
-                maxResults=1 # Anzahl der Suchergebnisse, die du erhalten möchtest
+                maxResults=1,  # Anzahl der Suchergebnisse, die du erhalten möchtest
+                videoDuration=length if length else 'any'
             ).execute()
 
             for search_result in search_response.get('items', []):
                 video_id = search_result['id']['videoId']
                 video_title = search_result['snippet']['title']
-                video_iframe =  f'https://www.youtube.com/embed/{video_id}'
+                video_iframe = f'https://www.youtube.com/embed/{video_id}'
                 output['video_iframe'] = video_iframe
                 output['video_title'] = video_title
 
