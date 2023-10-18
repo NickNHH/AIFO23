@@ -2,9 +2,15 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { botReplies, gifsLinks, imageLinks } from './bot-replies';
 
+interface MessageJSON {
+  message: string;
+  video_iframe: string;
+  video_title: string;
+}
+
 @Injectable()
 export class ChatBotService {
-  public output: string | undefined = '';
+  public output: MessageJSON | undefined = undefined;
 
   constructor(protected httpClient: HttpClient) {
   }
@@ -35,13 +41,19 @@ export class ChatBotService {
     }
 
     await this.getMessage(message)
-    botReply.reply.text = this.output;
+    botReply.reply.text = this.output?.message;
+    console.log(this.output)
+
+    if (this.output?.video_title != null) {
+      botReply.reply.text += "\nHere's the title: " + this.output.video_title;
+    }
+
     return { ...botReply.reply };
   }
 
   async getMessage(input: string) {
     return this.httpClient.post("http://localhost:8080/sendMessage/", {'message': input}, {responseType: 'text'}).toPromise().then(data => {
-      this.output = data;
+      this.output = JSON.parse(data!.toString());
     });
   }
 }

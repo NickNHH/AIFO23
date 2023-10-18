@@ -15,3 +15,5 @@
   <nb-chat-form (send)="sendMessage($event)" [dropFiles]="true">
   </nb-chat-form>
 </nb-chat>
+
+<iframe *ngIf="safeUrl != ''" [src]="safeUrl"></iframe>

@@ -13,8 +13,7 @@ api_key = 'AIzaSyDHp9JYjw2l36x448MRcpBEHr7EIpGnJ8U'
 youtube = build('youtube', 'v3', developerKey=api_key)
 
 # path to the key-file
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"]='/Users/tuni/OneDrive/Studium/3 sem/AIFo/Project/BE/yt-chatbot-g99r-482b927c4e27.json'
-# os.environ["GOOGLE_APPLICATION_CREDENTIALS"]='C:/Users/tobia/OneDrive - OST/Studium/3. Semester/AIFO/Projekt/AIFO23/AIFO23/BE/yt-chatbot-g99r-482b927c4e27.json'
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"]='./yt-chatbot-g99r-482b927c4e27.json'
 
 
 def get_output(response):

@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, SecurityContext} from '@angular/core';
 import {ChatBotService} from "./chat-bot.service";
+import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 
 @Component({
   selector: 'app-chat-bot',
@@ -7,9 +8,10 @@ import {ChatBotService} from "./chat-bot.service";
   styleUrls: ['./chat-bot.component.scss']
 })
 export class ChatBotComponent implements OnInit {
+  safeUrl: SafeUrl = '';
   messages: any[];
 
-  constructor(protected chatBotService: ChatBotService) {
+  constructor(protected chatBotService: ChatBotService, private sanitizer: DomSanitizer) {
     this.messages = [];
   }
 
@@ -35,8 +37,15 @@ export class ChatBotComponent implements OnInit {
       },
     });
     const botReply = await this.chatBotService.reply(event.message);
+    this.getVideoURL();
     if (botReply) {
       setTimeout(() => { this.messages.push(botReply) }, 500);
+    }
+  }
+
+  getVideoURL(): void {
+    if (this.chatBotService.output?.message == 'Have fun with your video!') {
+      this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.chatBotService.output!.video_iframe);
     }
   }
 }
