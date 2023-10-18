@@ -1,7 +1,7 @@
 <nb-chat title="AIFO23">
   <div *nbCustomMessage="'video'">
     <p class="text-control button-custom-message-text">{{chatBotService.output?.video_title}}</p>
-    <iframe *ngIf="safeUrl != ''" [src]="safeUrl"></iframe>
+    <iframe *ngIf="safeUrl != ''" [src]="safeUrl" allow="fullscreen"></iframe>
   </div>
 
   <nb-chat-message *ngFor="let msg of messages"
