@@ -1,4 +1,4 @@
-import {Component, OnInit, SecurityContext} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ChatBotService} from "./chat-bot.service";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 

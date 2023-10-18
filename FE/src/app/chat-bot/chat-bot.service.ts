@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import { botReplies, gifsLinks, imageLinks } from './bot-replies';
+import {botAvatar, botReplies, gifsLinks, imageLinks} from './bot-replies';
 
 interface MessageJSON {
   message: string;
@@ -45,7 +45,15 @@ export class ChatBotService {
     console.log(this.output)
 
     if (this.output?.video_title != null) {
-      botReply.reply.text += "\nHere's the title: " + this.output.video_title;
+      return {
+        type: 'video',
+        reply: false,
+        date: new Date(),
+        user: {
+          name: 'Bot',
+          avatar: botAvatar,
+        },
+      }
     }
 
     return { ...botReply.reply };
