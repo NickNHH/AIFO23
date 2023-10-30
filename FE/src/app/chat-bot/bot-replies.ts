@@ -1,4 +1,4 @@
-export const botAvatar: string = 'https://s3.amazonaws.com/pix.iemoji.com/images/emoji/apple/ios-12/256/robot-face.png';
+export const botAvatar: string = '../../assets/YTChatbotPB.png';
 
 export const gifsLinks: string[] = [
   'https://media.tenor.com/images/ac287fd06319e47b1533737662d5bfe8/tenor.gif',

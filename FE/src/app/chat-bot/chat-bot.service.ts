@@ -6,6 +6,15 @@ interface MessageJSON {
   message: string;
   video_iframe: string;
   video_title: string;
+  comment_count: string,
+  like_count: string,
+  view_count: string,
+  videos: Video
+}
+
+interface Video {
+  video_title: string,
+  video_url: string
 }
 
 @Injectable()
@@ -44,16 +53,16 @@ export class ChatBotService {
     botReply.reply.text = this.output?.message;
     console.log(this.output)
 
-    if (this.output?.video_title != null) {
-      return {
-        type: 'video',
-        reply: false,
-        date: new Date(),
-        user: {
-          name: 'Bot',
-          avatar: botAvatar,
-        },
-      }
+    if (this.output?.video_title != null && this.output.comment_count == null) {
+      return this.getVideoIntent(this.output?.message);
+    }
+
+    if (this.output?.videos != null) {
+      botReply.reply.text = this.getMultipleVideosIntent(this.output);
+    }
+
+    if (this.output?.comment_count != null) {
+      botReply.reply.text = this.getStatisticsIntent(this.output);
     }
 
     return { ...botReply.reply };
@@ -63,5 +72,28 @@ export class ChatBotService {
     return this.httpClient.post("http://localhost:8080/sendMessage/", {'message': input}, {responseType: 'text'}).toPromise().then(data => {
       this.output = JSON.parse(data!.toString());
     });
+  }
+
+  getVideoIntent(message: string) {
+    return {
+      type: 'video',
+      answerArray: [message],
+      user: {
+        name: 'Bot',
+        avatar: botAvatar,
+      },
+    }
+  }
+
+  getMultipleVideosIntent(output: any) {
+    let message = 'Here are more videos like this:\n';
+    output.videos.forEach(function (video: Video) {
+      message += `- Video title: ${video.video_title}\n- Video URL: ${video.video_url}\n\n`
+    });
+    return message;
+  }
+
+  getStatisticsIntent(output: any) {
+    return `${output.message}\n- Title: ${output.video_title}\n- Comments: ${output.comment_count}\n- Likes: ${output.like_count}\n- Views: ${output.view_count}`
   }
 }
