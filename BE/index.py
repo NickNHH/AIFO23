@@ -13,9 +13,10 @@ api_key = 'AIzaSyDHp9JYjw2l36x448MRcpBEHr7EIpGnJ8U'
 youtube = build('youtube', 'v3', developerKey=api_key)
 
 # path to the key-file
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"]='./yt-chatbot-g99r-482b927c4e27.json'
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = './yt-chatbot-g99r-482b927c4e27.json'
 
 last_video_id = None
+
 
 def get_output(response):
     global last_video_id
@@ -32,27 +33,9 @@ def get_output(response):
         # output['keyword'] = keyword
         # output['length'] = length
         if channel != '' and keyword != '':
-            # Führe die Kanalsuche durch
-            search_response = youtube.search().list(
-                q=channel,
-                type='channel',
-                part='snippet',
-                maxResults=1  # Wir suchen nur nach dem ersten gefundenen Kanal
-            ).execute()
+            channel_id = getChannelId(channel)
 
-            # Durchlaufe die Suchergebnisse und extrahiere den Kanal-ID
-            channel_id = None
-            if 'items' in search_response:
-                channel_id = search_response['items'][0]['id']['channelId']
-
-            search_response = youtube.search().list(
-                q=keyword,
-                type='video',
-                part='id,snippet',
-                channelId=channel_id,
-                maxResults=1,  # Anzahl der Suchergebnisse, die du erhalten möchtest
-                videoDuration=length if length else 'any'
-            ).execute()
+            search_response = get_search_response(keyword, channel_id, 1, length if length else 'any')
 
             for search_result in search_response.get('items', []):
                 last_video_id = search_result['id']['videoId']
@@ -90,27 +73,9 @@ def get_output(response):
                     break
 
             if channel != '' and keyword != '':
-                # Führe die Kanalsuche durch
-                search_response = youtube.search().list(
-                    q=channel,
-                    type='channel',
-                    part='snippet',
-                    maxResults=1  # Wir suchen nur nach dem ersten gefundenen Kanal
-                ).execute()
+                channel_id = getChannelId(channel)
 
-                # Durchlaufe die Suchergebnisse und extrahiere den Kanal-ID
-                channel_id = None
-                if 'items' in search_response:
-                    channel_id = search_response['items'][0]['id']['channelId']
-
-                search_response = youtube.search().list(
-                    q=keyword,
-                    type='video',
-                    part='id,snippet',
-                    channelId=channel_id,
-                    maxResults=amount,  # Anzahl der Suchergebnisse, die du erhalten möchtest
-                    videoDuration=length if length else 'any'
-                ).execute()
+                search_response = get_search_response(keyword, channel_id, amount, length if length else 'any')
 
                 output['videos'] = []
                 for search_result in search_response.get('items', []):
@@ -120,6 +85,35 @@ def get_output(response):
                     output['videos'].append({'video_url': video_url, 'video_title': video_title})
 
     return output
+
+
+def getChannelId(channel):
+    # Führe die Kanalsuche durch
+    search_response = youtube.search().list(
+        q=channel,
+        type='channel',
+        part='snippet',
+        maxResults=1  # Wir suchen nur nach dem ersten gefundenen Kanal
+    ).execute()
+
+    # Durchlaufe die Suchergebnisse und extrahiere den Kanal-ID
+    channel_id = None
+    if 'items' in search_response:
+        channel_id = search_response['items'][0]['id']['channelId']
+
+    return channel_id
+
+
+def get_search_response(keyword, channel_id, maxResults, videoDuration):
+    search_response = youtube.search().list(
+        q=keyword,
+        type='video',
+        part='id,snippet',
+        channelId=channel_id,
+        maxResults=maxResults,  # Anzahl der Suchergebnisse, die du erhalten möchtest
+        videoDuration=videoDuration
+    ).execute()
+    return search_response
 
 
 @app.route('/sendMessage/', methods=['POST'])
