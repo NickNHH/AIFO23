@@ -60,6 +60,8 @@ def get_output(response):
                 video_iframe = f'https://www.youtube.com/embed/{last_video_id}'
                 output['video_iframe'] = video_iframe
                 output['video_title'] = video_title
+        else:
+            last_video_id = None
     elif intent_name == 'video.statistics':
         if last_video_id:
             video_response = youtube.videos().list(
@@ -73,13 +75,15 @@ def get_output(response):
             output['comment_count'] = video_statistics.get('commentCount', '0')
             output['video_description'] = video_response['items'][0]['snippet']['description']
             output['video_title'] = video_response['items'][0]['snippet']['title']
+        else:
+            output['message'] = 'Search a video first'
     elif intent_name == 'video.more':
         amount = response['query_result'].parameters.get('amount')
         if amount != '':
             channel, keyword, length = None, None, None
             output_contexts = response['query_result'].output_contexts
             for context in output_contexts:
-                if str(context.parameters.get('channel')): # das funktioniert noch nicht, wenn man zuerst Video sucht, dann stats anzeigt und dann noch more videos. Dann liest es hier vermutlich den channel nicht aus. Weil dann 2 intents hier drin sind. If nützt anscheinend nichts. Oder er verliert den channel und so aber das macht kein sinn eigentlich.
+                if str(context.parameters.get('channel') != ""):
                     channel = context.parameters.get('channel')
                     keyword = context.parameters.get('keyword')
                     length = context.parameters.get('length')
