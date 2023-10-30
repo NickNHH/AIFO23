@@ -72,7 +72,7 @@ def get_output(response):
                     length = context.parameters.get('length')
                     break
 
-            if channel != '' and keyword != '':
+            if channel is not None and keyword is not None:
                 channel_id = getChannelId(channel)
 
                 search_response = get_search_response(keyword, channel_id, amount, length if length else 'any')
