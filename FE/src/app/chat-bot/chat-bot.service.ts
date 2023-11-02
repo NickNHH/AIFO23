@@ -80,7 +80,7 @@ export class ChatBotService {
       reply: false,
       date: new Date(),
       user: {
-        name: 'Bot',
+        name: 'YTBot',
         avatar: botAvatar,
       },
     }

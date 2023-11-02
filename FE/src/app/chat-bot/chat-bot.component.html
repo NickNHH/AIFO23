@@ -1,4 +1,4 @@
-<nb-chat title="AIFO23">
+<nb-chat title="YouTube Video Search Bot">
   <div *nbCustomMessage="'video'">
     <p class="text-control button-custom-message-text">{{chatBotService.output?.video_title}}</p>
     <iframe *ngIf="safeUrl != ''" [src]="safeUrl" allow="fullscreen"></iframe>

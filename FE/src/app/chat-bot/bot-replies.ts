@@ -27,7 +27,7 @@ export const botReplies = [
       reply: false,
       date: new Date(),
       user: {
-        name: 'Bot',
+        name: 'YTBot',
         avatar: botAvatar,
       },
     },
@@ -42,7 +42,7 @@ export const botReplies = [
       reply: false,
       date: new Date(),
       user: {
-        name: 'Bot',
+        name: 'YTBot',
         avatar: botAvatar,
       },
     },
@@ -63,7 +63,7 @@ export const botReplies = [
         },
       ],
       user: {
-        name: 'Bot',
+        name: 'YTBot',
         avatar: botAvatar,
       },
     },
@@ -84,7 +84,7 @@ export const botReplies = [
         },
       ],
       user: {
-        name: 'Bot',
+        name: 'YTBot',
         avatar: botAvatar,
       },
     },
@@ -114,7 +114,7 @@ export const botReplies = [
       ],
       icon: 'file-text-outline',
       user: {
-        name: 'Bot',
+        name: 'YTBot',
         avatar: botAvatar,
       },
     },
@@ -136,7 +136,7 @@ export const botReplies = [
       ],
       icon: 'file-text-outline',
       user: {
-        name: 'Bot',
+        name: 'YTBot',
         avatar: botAvatar,
       },
     },
@@ -153,7 +153,7 @@ export const botReplies = [
       latitude: 53.914321,
       longitude: 27.5998355,
       user: {
-        name: 'Bot',
+        name: 'YTBot',
         avatar: botAvatar,
       },
     },
@@ -169,7 +169,7 @@ export const botReplies = [
       type: 'quote',
       quote: '',
       user: {
-        name: 'Bot',
+        name: 'YTBot',
         avatar: botAvatar,
       },
     },
@@ -183,7 +183,7 @@ export const botReplies = [
       reply: false,
       date: new Date(),
       user: {
-        name: 'Bot',
+        name: 'YTBot',
         avatar: botAvatar,
       },
     },

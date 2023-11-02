@@ -39,7 +39,10 @@ export class ChatBotComponent implements OnInit {
     const botReply = await this.chatBotService.reply(event.message);
     this.getVideoURL();
     if (botReply) {
-      setTimeout(() => { this.messages.push(botReply) }, 500);
+      setTimeout(() => {
+        this.messages.push(botReply);
+        window.scroll(0,document.body.scrollHeight);
+      }, 500);
     }
   }
 
